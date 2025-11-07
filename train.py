@@ -11,7 +11,8 @@ import torch.optim as optim
 import time
 from models.dgcnn import DGCNN
 from models.meshnet import MeshNet
-from models.SVCNN import SingleViewNet, CorrNet
+from models.SVCNN import SingleViewNet
+from models.corrnet import CorrNet
 from tools.triplet_dataloader import TripletDataloader
 from tools.utils import calculate_accuracy
 from center_loss import CrossModalCenterLoss
@@ -207,12 +208,16 @@ if __name__ == "__main__":
     parser.add_argument('--save', type=str,  default='./checkpoints/ModelNet40',
                         help='path to save the final model')
 
-    parser.add_argument('--gpu_id', type=str,  default='0,1,2,3',
+    parser.add_argument('--gpu_id', type=str,  default='1',
                         help='GPU used to train the network')
 
     parser.add_argument('--log', type=str,  default='log/',
                         help='path to the log information')
+    parser.add_argument('--k', type=int,  default=20,
+                        help='path to the log information')
 
+    parser.add_argument('--emb_dims', type=int,  default=20,
+                        help='path to the log information')
     args = parser.parse_args()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
     torch.backends.cudnn.enabled = False
