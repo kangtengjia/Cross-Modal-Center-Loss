@@ -14,7 +14,7 @@ def main():
                        help='Model folder name')
     parser.add_argument('--iterations', type=int, default=55000, 
                        help='Number of iterations the model was trained for')
-    parser.add_argument('--gpu_id', type=str, default='0,1,2,3', 
+    parser.add_argument('--gpu_id', type=str, default='0', 
                        help='GPU IDs to use for evaluation')
     parser.add_argument('--save', type=str, default='extracted_features/ModelNet40', 
                        help='Path to save extracted features')
