@@ -29,11 +29,11 @@ from sklearn.preprocessing import normalize
 import scipy
 
 def extract(args):
-    img_net = torch.load('./checkpoints/%s/%d-img_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage)
+    img_net = torch.load('./checkpoints/%s/%d-img_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage, weights_only=False)
     img_net = img_net.eval()
-    dgcnn = torch.load('./checkpoints/%s/%d-pt_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage)
+    dgcnn = torch.load('./checkpoints/%s/%d-pt_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage, weights_only=False)
     dgcnn = dgcnn.eval()
-    mesh_net= torch.load('./checkpoints/%s/%d-mesh_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage)
+    mesh_net= torch.load('./checkpoints/%s/%d-mesh_net.pkl'%(args.model_folder, args.iterations), map_location=lambda storage, loc: storage, weights_only=False)
     mesh_net = mesh_net.eval()
     torch.cuda.empty_cache()
     #################################    
@@ -156,10 +156,11 @@ if __name__ == "__main__":
                         
     parser.add_argument('--iterations', type=int,  default=55000,help='iteration to load the model')
 
-    parser.add_argument('--gpu_id', type=str,  default='0,1,2,3',help='GPU used to train the network')
+    parser.add_argument('--gpu_id', type=str,  default='0',help='GPU used to train the network')
                                                 
     parser.add_argument('--save', type=str,  default='extracted_features/ModelNet40',help='save features')
                         
+    parser.add_argument('--use_existing_features', action='store_true', help='Use existing extracted features instead of extracting from dataset')
 
     args = parser.parse_args()
 
@@ -169,7 +170,10 @@ if __name__ == "__main__":
     if not os.path.exists(args.save):
         os.mkdir(args.save)
     
-    extract(args)
+    # Only extract features if not using existing features
+    if not args.use_existing_features:
+        extract(args)
+    
     eval_func(1)
     eval_func(2)
     eval_func(4)
